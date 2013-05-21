@@ -1,0 +1,90 @@
+Copyright (c) 2013 The University of Edinburgh.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
+
+Welcome to the EPCC OpenACC Benchmark Suite.
+
+1. Compiling & Running
+2. The benchmarks
+3. Output format
+
+If you do find bugs, or mistakes, please contact me so I can improve the suite.
+-Nick Johnson.
+Nick.Johnson@ed.ac.uk
+
+
+1. Compiling & Running
+-----------------------------------------------------------------------------------------------
+To compile the benchmarks, please use the provided makefile.
+It should be invoked as such:
+make COMP=X
+
+Where X represents a choice from the targets lsited below:
+cray : for compilation on a Cray machine using the Cray compiler.
+craypgi : for compilation on a Cray machine using PGI as packaged for Cray.
+pgi : for compilation using the PGI compiler.
+hmpp : for compilation with the CAPS compiler.
+
+If you use another compiler, you will need to either compile by hand or add the relevant section to the makefile.
+
+To run the benchmarks, execute the file oa. Two command line options can be given:
+--datasize <X>
+--reps <Y>
+
+X is the desired datasize in BYTES. This is the maximum datasize that will be used. The default is 1048576 bytes.
+Y is the desired number of repetitions for each benchmarks. The default is 10 repetitions.
+
+
+2. The benchmarks.
+-----------------------------------------------------------------------------------------------
+The benchmarks are divided into three section: Level0, Level1 and Applications.
+
+Level0 benchmarks mainly measure the speed of operation of various OpenACC functions.
+Note that the SlicedD2H and SlicedH2D benchmarks use non-contiguously allocated memory which is not allowed by the standard but MAY be of use.
+Some of the results are reported as the time for device execution minus the time for the host execution. This result may have a negative mean if the times are relatively close but with some variation. This does not indicate an error.
+
+ContigD2H & ContigH2D measure the time to copy a contiguous chunk of data to/from the device.
+SlicedD2H & SlicedH2D measure the time to copy a non-contiguous chunk of data, ie a column of a 2D array to/from the device.
+Kernels If & Parallel If measure the difference in time between executing a simple loop on the host and on the host by way of the if clause.
+Parallel Private & Parallel 1stPrivate measure the overhead of privatising or 1st-privatising a chunk of data.
+Parallel Combined & Kernels Combined measure the difference between using statements of the form (kernels shown):
+#pragma acc kernels
+#pragma acc loop
+&
+#pragma acc kernels loop
+Parallel Invocation & Kernels Invocation measure the overhead of invoking a simple kernel.
+Update measures the cost of performing an update from device to host inside a data region.
+Parallel Reduction & Kernels Reduction measure the overhead of performing a reduction.
+
+
+Level1 benchmarks measure the performance of some BLAS-type kernels.
+These are OpenACC ports of the Polybench and Polybench/GPU kernels, please see information in NOTICE regarding the license for these.
+
+Applications are real application codes.
+Again, please see information in NOTICE regarding the license for these.
+
+
+
+3. Output format
+-----------------------------------------------------------------------------------------------
+Output is written to standard out and is of the format:
+COMPILER Benchmark_Name Mean_Runtime Std_Deviation
+
+COMPILER is selected based on C pre-processor macros, if you compiler using a compiler I have not tested, the default "COMPILER" will be used.
+The mean runtime and standard deviation are reported in micro-seconds.
+The OpenMP timer is used for portability and therefore reports time taken to return to the host.
+
+
+
