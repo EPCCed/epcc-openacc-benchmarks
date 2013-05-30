@@ -600,17 +600,19 @@ double update(){
   {
 
 #pragma acc kernels
-#pragma acc loop
-    for (i=0;i<n;i++){
-      a[i] = i;
-    }
-
+	  {
+		#pragma acc loop
+			for (i=0;i<n;i++){
+			  a[i] = i;
+			}
+	  }
 #pragma acc kernels
-#pragma acc loop
-    for (i=0;i<n;i++){
-      a[i] = i;
-    }
-
+	  {
+		#pragma acc loop
+		for (i=0;i<n;i++){
+		  a[i] = i;
+		}
+	  }
   }
   t1_end = omp_get_wtime();
 
@@ -620,19 +622,21 @@ double update(){
   {
 
 #pragma acc kernels
-#pragma acc loop
+{
+	#pragma acc loop
     for (i=0;i<n;i++){
       a[i] = i;
     }
-
+}
 #pragma acc update host(a[0:n])
 
 #pragma acc kernels
-#pragma acc loop
-    for (i=0;i<n;i++){
-      a[i] = i;
-    }
-
+	{
+		#pragma acc loop
+		for (i=0;i<n;i++){
+		  a[i] = i;
+		}
+	}
   }
   t2_end = omp_get_wtime();
 
