@@ -674,7 +674,7 @@ double kernels_invoc(){
     t1_start = omp_get_wtime();
 #pragma acc kernels loop
     for (i=0;i<n;i++){
-      a[i] = 10*i;
+      a[i] = 10*a[i];
     }
     t1_end = omp_get_wtime();
 
